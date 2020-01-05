@@ -1,5 +1,6 @@
 from selfdrive.config import Conversions as CV
 from selfdrive.car.honda.values import HONDA_BOSCH
+from selfdrive.car import crc8_pedal as crc8
 
 
 def get_pt_bus(car_fingerprint, has_relay):
