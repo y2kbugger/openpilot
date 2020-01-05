@@ -134,7 +134,7 @@ DBC = {
   CAR.ACCORD: dbc_dict('honda_accord_s2t_2018_can_generated', None),
   CAR.ACCORD_15: dbc_dict('honda_accord_lx15t_2018_can_generated', None),
   CAR.ACCORDH: dbc_dict('honda_accord_s2t_2018_can_generated', None),
-  CAR.ACURA_ILX: dbc_dict('acura_ilx_2016_can_generated', 'acura_ilx_2016_nidec'),
+  CAR.ACURA_ILX: dbc_dict('acura_ilx_2016_can_generated', None),
   CAR.ACURA_RDX: dbc_dict('acura_rdx_2018_can_generated', 'acura_ilx_2016_nidec'),
   CAR.CIVIC: dbc_dict('honda_civic_touring_2016_can_generated', 'acura_ilx_2016_nidec'),
   CAR.CIVIC_BOSCH: dbc_dict('honda_civic_hatchback_ex_2017_can_generated', None),
@@ -193,4 +193,4 @@ ECU_FINGERPRINT = {
   ECU.CAM: [0xE4, 0x194],   # steer torque cmd
 }
 
-HONDA_BOSCH = [CAR.ACCORD, CAR.ACCORD_15, CAR.ACCORDH, CAR.CIVIC_BOSCH, CAR.CRV_5G, CAR.CRV_HYBRID]
+HONDA_BOSCH = [CAR.ACCORD, CAR.ACCORD_15, CAR.ACCORDH, CAR.CIVIC_BOSCH, CAR.CRV_5G, CAR.CRV_HYBRID, CAR.ACURA_ILX]
