@@ -139,7 +139,7 @@ class CarInterface(CarInterfaceBase):
     ret.carVin = vin
     ret.isPandaBlack = has_relay
 
-    if candidate in HONDA_BOSCH:
+    if candidate not in HONDA_BOSCH:
       ret.safetyModel = car.CarParams.SafetyModel.hondaBosch
       rdr_bus = 0 if has_relay else 2
       ret.enableCamera = is_ecu_disconnected(fingerprint[rdr_bus], FINGERPRINTS, ECU_FINGERPRINT, candidate, ECU.CAM) or has_relay
