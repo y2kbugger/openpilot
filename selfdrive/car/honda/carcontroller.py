@@ -148,7 +148,7 @@ class CarController():
     # Send dashboard UI commands.
     if (frame % 10) == 0:
       idx = (frame//10) % 4
-      can_sends.extend(hondacan.create_ui_commands(self.packer, pcm_speed, hud, CS.CP.carFingerprint, CS.is_metric, idx, CS.CP.isPandaBlack, CS.stock_hud))
+      can_sends.extend(hondacan.create_ui_commands(self.packer, pcm_speed, hud, CS.CP.carFingerprint, False, idx, CS.CP.isPandaBlack, CS.stock_hud))
 
    # if CS.CP.radarOffCan:
       # If using stock ACC, spam cancel command to kill gas when OP disengages.
