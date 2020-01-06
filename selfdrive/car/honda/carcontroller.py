@@ -91,9 +91,9 @@ class CarController():
     brake, self.braking, self.brake_steady = actuator_hystereses(actuators.brake, self.braking, self.brake_steady, CS.v_ego, CS.CP.carFingerprint)
 
     # *** no output if not enabled ***
-    if not enabled and CS.pcm_acc_status:
+    #if not enabled and CS.pcm_acc_status:
       # send pcm acc cancel cmd if drive is disabled but pcm is still on, or if the system can't be activated
-      pcm_cancel_cmd = True
+     # pcm_cancel_cmd = True
 
     # *** rate limit after the enable check ***
     self.brake_last = rate_limit(brake, self.brake_last, -2., 1./100)
@@ -150,12 +150,12 @@ class CarController():
       idx = (frame//10) % 4
       can_sends.extend(hondacan.create_ui_commands(self.packer, pcm_speed, hud, CS.CP.carFingerprint, CS.is_metric, idx, CS.CP.isPandaBlack, CS.stock_hud))
 
-    if CS.CP.radarOffCan:
+   # if CS.CP.radarOffCan:
       # If using stock ACC, spam cancel command to kill gas when OP disengages.
-      if pcm_cancel_cmd:
-        can_sends.append(hondacan.spam_buttons_command(self.packer, CruiseButtons.CANCEL, idx, CS.CP.carFingerprint, CS.CP.isPandaBlack))
-      elif CS.stopped:
-        can_sends.append(hondacan.spam_buttons_command(self.packer, CruiseButtons.RES_ACCEL, idx, CS.CP.carFingerprint, CS.CP.isPandaBlack))
+    #  if pcm_cancel_cmd:
+    #    can_sends.append(hondacan.spam_buttons_command(self.packer, CruiseButtons.CANCEL, idx, CS.CP.carFingerprint, CS.CP.isPandaBlack))
+     # elif CS.stopped:
+      #  can_sends.append(hondacan.spam_buttons_command(self.packer, CruiseButtons.RES_ACCEL, idx, CS.CP.carFingerprint, CS.CP.isPandaBlack))
 
     else:
       # Send gas and brake commands.
