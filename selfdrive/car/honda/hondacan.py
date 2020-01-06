@@ -46,8 +46,8 @@ def create_steering_control(packer, apply_steer, lkas_active, car_fingerprint, i
   }
   
   if enable:
-    values["STEER_COMMAND"] = trq_command
-    values["STEER_COMMAND2"] = trq_command
+    values["STEER_COMMAND"] = apply_steer
+    values["STEER_COMMAND2"] = apply_steer
     
   dat = packer.make_can_msg("STEER_TORQUE_COMMAND", 0, values)[2]
   
