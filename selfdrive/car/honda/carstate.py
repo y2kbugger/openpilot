@@ -85,7 +85,7 @@ def get_can_parser(CP):
 
 def get_cam_can_parser(CP):
   signals = []
-
+  checks = []
   
 
 
