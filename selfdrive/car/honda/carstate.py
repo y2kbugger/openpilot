@@ -160,7 +160,7 @@ def get_can_signals(CP):
  #   checks.append(("GAS_SENSOR", 50))
   print("Signals")
   print(signals)
-  print("Checks"
+  print("Checks")
   print(checks)
   return signals, checks
 
