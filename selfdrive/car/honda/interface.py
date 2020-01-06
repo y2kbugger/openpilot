@@ -147,7 +147,7 @@ class CarInterface(CarInterfaceBase):
     cloudlog.warning("ECU Camera Simulated: %r", ret.enableCamera)
     cloudlog.warning("ECU Gas Interceptor: %r", ret.enableGasInterceptor)
 
-    ret.enableCruise = True #not ret.enableGasInterceptor
+    ret.enableCruise = not ret.enableGasInterceptor
     ret.communityFeature = ret.enableGasInterceptor
 
     # Certain Hondas have an extra steering sensor at the bottom of the steering rack,
