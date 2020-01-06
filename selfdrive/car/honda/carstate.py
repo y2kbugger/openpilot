@@ -154,10 +154,10 @@ def get_can_signals(CP):
     checks += [("EPB_STATUS", 50)]
 
   # add gas interceptor reading if we are using it
- # if CP.enableGasInterceptor:
- #   signals.append(("INTERCEPTOR_GAS", "GAS_SENSOR", 0))
- #   signals.append(("INTERCEPTOR_GAS2", "GAS_SENSOR", 0))
- #   checks.append(("GAS_SENSOR", 50))
+  if CP.enableGasInterceptor:
+    signals.append(("INTERCEPTOR_GAS", "GAS_SENSOR", 0))
+    signals.append(("INTERCEPTOR_GAS2", "GAS_SENSOR", 0))
+    checks.append(("GAS_SENSOR", 50))
   print("Signals")
   print(signals)
   print("Checks")
