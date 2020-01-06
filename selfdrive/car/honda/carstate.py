@@ -91,7 +91,7 @@ def get_can_signals(CP):
       ("GEARBOX", 100),
     ]
 
-  if CP.radarOffCan:
+  if not CP.radarOffCan:
     # Civic is only bosch to use the same brake message as other hondas.
     if CP.carFingerprint not in (CAR.ACCORDH, CAR.CIVIC_BOSCH, CAR.CRV_HYBRID):
       signals += [("BRAKE_PRESSED", "BRAKE_MODULE", 0)]
@@ -167,25 +167,25 @@ def get_can_signals(CP):
 
 def get_can_parser(CP):
   signals, checks = get_can_signals(CP)
-  bus_pt = 1 if CP.isPandaBlack and CP.carFingerprint in HONDA_BOSCH else 0
+  bus_pt = 1 if CP.isPandaBlack and not CP.carFingerprint in HONDA_BOSCH else 0
   return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, bus_pt)
 
 
 def get_cam_can_parser(CP):
   signals = []
 
- # if CP.carFingerprint in HONDA_BOSCH:
-    #signals += [("ACCEL_COMMAND", "ACC_CONTROL", 0),
-               # ("AEB_STATUS", "ACC_CONTROL", 0)]
- # else:
-  #  signals += [("COMPUTER_BRAKE", "BRAKE_COMMAND", 0),
-      #          ("AEB_REQ_1", "BRAKE_COMMAND", 0),
-      #          ("FCW", "BRAKE_COMMAND", 0),
-      #          ("CHIME", "BRAKE_COMMAND", 0),
-      #          ("FCM_OFF", "ACC_HUD", 0),
-      #          ("FCM_OFF_2", "ACC_HUD", 0),
-      #          ("FCM_PROBLEM", "ACC_HUD", 0),
-      #          ("ICONS", "ACC_HUD", 0)]
+  if not CP.carFingerprint in HONDA_BOSCH:
+    signals += [("ACCEL_COMMAND", "ACC_CONTROL", 0),
+                ("AEB_STATUS", "ACC_CONTROL", 0)]
+  else:
+    signals += [("COMPUTER_BRAKE", "BRAKE_COMMAND", 0),
+                ("AEB_REQ_1", "BRAKE_COMMAND", 0),
+                ("FCW", "BRAKE_COMMAND", 0),
+                ("CHIME", "BRAKE_COMMAND", 0),
+                ("FCM_OFF", "ACC_HUD", 0),
+                ("FCM_OFF_2", "ACC_HUD", 0),
+                ("FCM_PROBLEM", "ACC_HUD", 0),
+                ("ICONS", "ACC_HUD", 0)]
 
 
   # all hondas except CRV, RDX and 2019 Odyssey@China use 0xe4 for steering
@@ -262,7 +262,7 @@ class CarState():
     # LOW_SPEED_LOCKOUT is not worth a warning
     self.steer_warning = steer_status not in ['NORMAL', 'LOW_SPEED_LOCKOUT', 'NO_TORQUE_ALERT_2']
 
-    if self.CP.radarOffCan:
+    if not self.CP.radarOffCan:
       self.brake_error = 0
     else:
       self.brake_error = cp.vl["STANDSTILL"]['BRAKE_ERROR_1'] or cp.vl["STANDSTILL"]['BRAKE_ERROR_2']
@@ -333,7 +333,7 @@ class CarState():
 
     self.brake_switch = cp.vl["POWERTRAIN_DATA"]['BRAKE_SWITCH']
 
-    if self.CP.radarOffCan:
+    if not self.CP.radarOffCan:
       self.cruise_mode = cp.vl["ACC_HUD"]['CRUISE_CONTROL_LABEL']
       self.stopped = cp.vl["ACC_HUD"]['CRUISE_SPEED'] == 252.
       self.cruise_speed_offset = calc_cruise_offset(0, self.v_ego)
@@ -372,12 +372,12 @@ class CarState():
     # TODO: discover the CAN msg that has the imperial unit bit for all other cars
     self.is_metric = not cp.vl["HUD_SETTING"]['IMPERIAL_UNIT'] if self.CP.carFingerprint in (CAR.CIVIC) else False
 
-    if self.CP.carFingerprint in HONDA_BOSCH:
+    if not self.CP.carFingerprint in HONDA_BOSCH:
       self.stock_aeb = bool(cp_cam.vl["ACC_CONTROL"]["AEB_STATUS"] and cp_cam.vl["ACC_CONTROL"]["ACCEL_COMMAND"] < -1e-5)
     else:
       self.stock_aeb = bool(cp_cam.vl["BRAKE_COMMAND"]["AEB_REQ_1"] and cp_cam.vl["BRAKE_COMMAND"]["COMPUTER_BRAKE"] > 1e-5)
 
-    if self.CP.carFingerprint in HONDA_BOSCH:
+    if not self.CP.carFingerprint in HONDA_BOSCH:
       self.stock_hud = False
       self.stock_fcw = False
     else:
