@@ -92,18 +92,18 @@ def get_cam_can_parser(CP):
 
 
   # all hondas except CRV, RDX and 2019 Odyssey@China use 0xe4 for steering
-  #checks = [(0xe4, 100)]
+  checks = [(0x158, 100)]
   #if CP.carFingerprint in [CAR.CRV, CAR.ACURA_RDX, CAR.ODYSSEY_CHN]:
    # checks = [(0x194, 100)]
 
-  bus_cam = 2 # if CP.carFingerprint in HONDA_BOSCH  and not CP.isPandaBlack else 2
+  bus_cam = 0 # if CP.carFingerprint in HONDA_BOSCH  and not CP.isPandaBlack else 2
   return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, bus_cam)
 
 class CarState():
   def __init__(self, CP):
     self.CP = CP
     self.can_define = CANDefine(DBC[CP.carFingerprint]['pt'])
-    self.shifter_values = self.can_define.dv["GEARBOX"]["GEAR_SHIFTER"]
+    #self.shifter_values = self.can_define.dv["GEARBOX"]["GEAR_SHIFTER"]
     self.steer_status_values = defaultdict(lambda: "UNKNOWN", self.can_define.dv["STEER_STATUS"]["STEER_STATUS"])
 
     self.user_gas, self.user_gas_pressed = 0., 0
