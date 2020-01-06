@@ -65,7 +65,7 @@ def get_can_signals(CP):
 
   checks = [
      # ("ENGINE_DATA", 100),
-     # ("WHEEL_SPEEDS", 50),
+      ("WHEEL_SPEEDS", 50),
      # ("STEERING_SENSORS", 100),
      # ("SEATBELT_STATUS", 10),
      # ("CRUISE", 10),
