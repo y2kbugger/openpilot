@@ -88,52 +88,52 @@ class CarController():
              hud_v_cruise, hud_show_lanes, hud_show_car, hud_alert):
 
     # *** apply brake hysteresis ***
-    brake, self.braking, self.brake_steady = actuator_hystereses(actuators.brake, self.braking, self.brake_steady, CS.v_ego, CS.CP.carFingerprint)
+    #brake, self.braking, self.brake_steady = actuator_hystereses(actuators.brake, self.braking, self.brake_steady, CS.v_ego, CS.CP.carFingerprint)
 
     # *** no output if not enabled ***
-    if not enabled and CS.pcm_acc_status:
+    #if not enabled and CS.pcm_acc_status:
       # send pcm acc cancel cmd if drive is disabled but pcm is still on, or if the system can't be activated
-      pcm_cancel_cmd = True
+    #  pcm_cancel_cmd = True
 
     # *** rate limit after the enable check ***
-    self.brake_last = rate_limit(brake, self.brake_last, -2., 1./100)
+    #self.brake_last = rate_limit(brake, self.brake_last, -2., 1./100)
 
     # vehicle hud display, wait for one update from 10Hz 0x304 msg
-    if hud_show_lanes:
-      hud_lanes = 1
-    else:
-      hud_lanes = 0
+    #if hud_show_lanes:
+    #  hud_lanes = 1
+    #else:
+    #  hud_lanes = 0
 
-    if enabled:
-      if hud_show_car:
-        hud_car = 2
-      else:
-        hud_car = 1
-    else:
-      hud_car = 0
+    #if enabled:
+    #  if hud_show_car:
+    #    hud_car = 2
+    #  else:
+    #    hud_car = 1
+    #else:
+    #  hud_car = 0
 
-    fcw_display, steer_required, acc_alert = process_hud_alert(hud_alert)
+    #fcw_display, steer_required, acc_alert = process_hud_alert(hud_alert)
 
-    hud = HUDData(int(pcm_accel), int(round(hud_v_cruise)), 1, hud_car,
+    #hud = HUDData(int(pcm_accel), int(round(hud_v_cruise)), 1, hud_car,
                   0xc1, hud_lanes, fcw_display, acc_alert, steer_required)
 
     # **** process the car messages ****
 
     # *** compute control surfaces ***
-    BRAKE_MAX = 1024//4
-    if CS.CP.carFingerprint in (CAR.ACURA_ILX):
-      STEER_MAX = 0xF00
-    elif CS.CP.carFingerprint in (CAR.CRV, CAR.ACURA_RDX):
-      STEER_MAX = 0x3e8  # CR-V only uses 12-bits and requires a lower value (max value from energee)
-    elif CS.CP.carFingerprint in (CAR.ODYSSEY_CHN):
-      STEER_MAX = 0x7FFF
-    else:
-      STEER_MAX = 0x1000
+   # BRAKE_MAX = 1024//4
+   # if CS.CP.carFingerprint in (CAR.ACURA_ILX):
+   #   STEER_MAX = 0xF00
+   # elif CS.CP.carFingerprint in (CAR.CRV, CAR.ACURA_RDX):
+   #   STEER_MAX = 0x3e8  # CR-V only uses 12-bits and requires a lower value (max value from energee)
+   # elif CS.CP.carFingerprint in (CAR.ODYSSEY_CHN):
+   #   STEER_MAX = 0x7FFF
+   # else:
+   #   STEER_MAX = 0x1000
 
     # steer torque is converted back to CAN reference (positive when steering right)
     apply_gas = clip(actuators.gas, 0., 1.)
-    apply_brake = int(clip(self.brake_last * BRAKE_MAX, 0, BRAKE_MAX - 1))
-    apply_steer = int(clip(-actuators.steer * STEER_MAX, -STEER_MAX, STEER_MAX))
+    apply_brake = clip(actuators.brake, 0., 1.)
+    apply_steer = apply_steer = int(round(final_steer * 2047))
 
     lkas_active = enabled and not CS.steer_not_allowed
 

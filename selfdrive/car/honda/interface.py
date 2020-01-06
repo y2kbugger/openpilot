@@ -137,24 +137,17 @@ class CarInterface(CarInterfaceBase):
     ret.carName = "honda"
     ret.carFingerprint = candidate
     ret.carVin = vin
-    ret.isPandaBlack = has_relay
+    ret.isPandaBlack = False #has_relay
 
-    if candidate not in HONDA_BOSCH:
-      ret.safetyModel = car.CarParams.SafetyModel.hondaBosch
-      rdr_bus = 0 if has_relay else 2
-      ret.enableCamera = is_ecu_disconnected(fingerprint[rdr_bus], FINGERPRINTS, ECU_FINGERPRINT, candidate, ECU.CAM) or has_relay
-      ret.radarOffCan = True
-      ret.openpilotLongitudinalControl = False
-    else:
-      ret.safetyModel = car.CarParams.SafetyModel.honda
-      ret.enableCamera = True #is_ecu_disconnected(fingerprint[0], FINGERPRINTS, ECU_FINGERPRINT, candidate, ECU.CAM) or has_relay
-      ret.enableGasInterceptor = 0x201 in fingerprint[0]
-      ret.openpilotLongitudinalControl = False #ret.enableCamera
-
+    ret.safetyModel = car.CarParams.SafetyModel.honda
+    ret.enableCamera = True #is_ecu_disconnected(fingerprint[0], FINGERPRINTS, ECU_FINGERPRINT, candidate, ECU.CAM) or has_relay
+    ret.enableGasInterceptor = 0x201 in fingerprint[0]
+    ret.openpilotLongitudinalControl = False #ret.enableCamera
+    ret.radarOffCan = True
     cloudlog.warning("ECU Camera Simulated: %r", ret.enableCamera)
     cloudlog.warning("ECU Gas Interceptor: %r", ret.enableGasInterceptor)
 
-    ret.enableCruise = not ret.enableGasInterceptor
+    ret.enableCruise = True #not ret.enableGasInterceptor
     ret.communityFeature = ret.enableGasInterceptor
 
     # Certain Hondas have an extra steering sensor at the bottom of the steering rack,
@@ -195,11 +188,11 @@ class CarInterface(CarInterfaceBase):
       ret.longitudinalTuning.kiV = [0.18, 0.12]
 
     elif candidate == CAR.ACURA_ILX:
-      stop_and_go = False
-      ret.mass = 3095. * CV.LB_TO_KG + STD_CARGO_KG
-      ret.wheelbase = 2.67
+      stop_and_go = True
+      ret.mass = 1240. * CV.LB_TO_KG + STD_CARGO_KG
+      ret.wheelbase = 2.66954
       ret.centerToFront = ret.wheelbase * 0.37
-      ret.steerRatio = 18.61  # 15.3 is spec end-to-end
+      ret.steerRatio = 16.1  # 15.3 is spec end-to-end
       tire_stiffness_factor = 0.72
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.8], [0.24]]
       ret.longitudinalTuning.kpBP = [0., 5., 35.]
@@ -380,7 +373,7 @@ class CarInterface(CarInterfaceBase):
     # create message
     ret = car.CarState.new_message()
 
-    ret.canValid = True #self.cp.can_valid and self.cp_cam.can_valid
+    ret.canValid = self.cp.can_valid and self.cp_cam.can_valid
 
     # speeds
     ret.vEgo = self.CS.v_ego
@@ -403,10 +396,12 @@ class CarInterface(CarInterfaceBase):
     # brake pedal
     ret.brake = self.CS.user_brake
     ret.brakePressed = self.CS.brake_pressed != 0
+    
+    
     # FIXME: read sendcan for brakelights
-    brakelights_threshold = 0.02 if self.CS.CP.carFingerprint == CAR.CIVIC else 0.1
-    ret.brakeLights = bool(self.CS.brake_switch or
-                           c.actuators.brake > brakelights_threshold)
+    #brakelights_threshold = 0.02 if self.CS.CP.carFingerprint == CAR.CIVIC else 0.1
+    ret.brakeLights = False #bool(self.CS.brake_switch or
+                           #c.actuators.brake > brakelights_threshold)
 
     # steering wheel
     ret.steeringAngle = self.CS.angle_steers
@@ -420,11 +415,11 @@ class CarInterface(CarInterfaceBase):
     ret.steeringPressed = self.CS.steer_override
 
     # cruise state
-    ret.cruiseState.enabled = self.CS.pcm_acc_status != 0
+    ret.cruiseState.enabled = self.CS.v_cruise_pcm  != 0
     ret.cruiseState.speed = self.CS.v_cruise_pcm * CV.KPH_TO_MS
-    ret.cruiseState.available = bool(self.CS.main_on) and not bool(self.CS.cruise_mode)
+    ret.cruiseState.available = bool(self.CS.main_on) #and not bool(self.CS.cruise_mode)
     ret.cruiseState.speedOffset = self.CS.cruise_speed_offset
-    ret.cruiseState.standstill = False
+    ret.cruiseState.standstill = self.CS.standstill
 
     # TODO: button presses
     buttonEvents = []
@@ -434,8 +429,8 @@ class CarInterface(CarInterfaceBase):
     ret.doorOpen = not self.CS.door_all_closed
     ret.seatbeltUnlatched = not self.CS.seatbelt
 
-    ret.stockAeb = self.CS.stock_aeb
-    ret.stockFcw = self.CS.stock_fcw
+    ret.stockAeb = 0 #self.CS.stock_aeb
+    ret.stockFcw = 0 #self.CS.stock_fcw
 
     if self.CS.left_blinker_on != self.CS.prev_left_blinker_on:
       be = car.CarState.ButtonEvent.new_message()
@@ -489,46 +484,46 @@ class CarInterface(CarInterfaceBase):
       events.append(create_event('steerUnavailable', [ET.NO_ENTRY, ET.IMMEDIATE_DISABLE, ET.PERMANENT]))
     elif self.CS.steer_warning:
       events.append(create_event('steerTempUnavailable', [ET.WARNING]))
-    if self.CS.brake_error:
-      events.append(create_event('brakeUnavailable', [ET.NO_ENTRY, ET.IMMEDIATE_DISABLE, ET.PERMANENT]))
+    #if self.CS.brake_error:
+    #  events.append(create_event('brakeUnavailable', [ET.NO_ENTRY, ET.IMMEDIATE_DISABLE, ET.PERMANENT]))
     if not ret.gearShifter == GearShifter.drive:
       events.append(create_event('wrongGear', [ET.NO_ENTRY, ET.SOFT_DISABLE]))
     if ret.doorOpen:
       events.append(create_event('doorOpen', [ET.NO_ENTRY, ET.SOFT_DISABLE]))
     if ret.seatbeltUnlatched:
       events.append(create_event('seatbeltNotLatched', [ET.NO_ENTRY, ET.SOFT_DISABLE]))
-    if self.CS.esp_disabled:
-      events.append(create_event('espDisabled', [ET.NO_ENTRY, ET.SOFT_DISABLE]))
-    if not self.CS.main_on or self.CS.cruise_mode:
+    #if self.CS.esp_disabled:
+    #  events.append(create_event('espDisabled', [ET.NO_ENTRY, ET.SOFT_DISABLE]))
+    if not self.CS.main_on #or self.CS.cruise_mode:
       events.append(create_event('wrongCarMode', [ET.NO_ENTRY, ET.USER_DISABLE]))
     if ret.gearShifter == GearShifter.reverse:
       events.append(create_event('reverseGear', [ET.NO_ENTRY, ET.IMMEDIATE_DISABLE]))
-    if self.CS.brake_hold and self.CS.CP.carFingerprint not in HONDA_BOSCH:
-      events.append(create_event('brakeHold', [ET.NO_ENTRY, ET.USER_DISABLE]))
-    if self.CS.park_brake:
-      events.append(create_event('parkBrake', [ET.NO_ENTRY, ET.USER_DISABLE]))
+    #if self.CS.brake_hold and self.CS.CP.carFingerprint not in HONDA_BOSCH:
+    #  events.append(create_event('brakeHold', [ET.NO_ENTRY, ET.USER_DISABLE]))
+    #if self.CS.park_brake:
+    #  events.append(create_event('parkBrake', [ET.NO_ENTRY, ET.USER_DISABLE]))
 
     if self.CP.enableCruise and ret.vEgo < self.CP.minEnableSpeed:
       events.append(create_event('speedTooLow', [ET.NO_ENTRY]))
 
     # disable on pedals rising edge or when brake is pressed and speed isn't zero
-    if (ret.gasPressed and not self.gas_pressed_prev) or \
-       (ret.brakePressed and (not self.brake_pressed_prev or ret.vEgo > 0.001)):
-      events.append(create_event('pedalPressed', [ET.NO_ENTRY, ET.USER_DISABLE]))
+    #if (ret.gasPressed and not self.gas_pressed_prev) or \
+     #  (ret.brakePressed and (not self.brake_pressed_prev or ret.vEgo > 0.001)):
+     # events.append(create_event('pedalPressed', [ET.NO_ENTRY, ET.USER_DISABLE]))
 
     if ret.gasPressed:
       events.append(create_event('pedalPressed', [ET.PRE_ENABLE]))
 
     # it can happen that car cruise disables while comma system is enabled: need to
     # keep braking if needed or if the speed is very low
-    if self.CP.enableCruise and not ret.cruiseState.enabled and (c.actuators.brake <= 0. or not self.CP.openpilotLongitudinalControl):
+   # if self.CP.enableCruise and not ret.cruiseState.enabled and (c.actuators.brake <= 0. or not self.CP.openpilotLongitudinalControl):
       # non loud alert if cruise disbales below 25mph as expected (+ a little margin)
-      if ret.vEgo < self.CP.minEnableSpeed + 2.:
-        events.append(create_event('speedTooLow', [ET.IMMEDIATE_DISABLE]))
-      else:
-        events.append(create_event("cruiseDisabled", [ET.IMMEDIATE_DISABLE]))
-    if self.CS.CP.minEnableSpeed > 0 and ret.vEgo < 0.001:
-      events.append(create_event('manualRestart', [ET.WARNING]))
+     # if ret.vEgo < self.CP.minEnableSpeed + 2.:
+     #   events.append(create_event('speedTooLow', [ET.IMMEDIATE_DISABLE]))
+     # else:
+      #  events.append(create_event("cruiseDisabled", [ET.IMMEDIATE_DISABLE]))
+    #if self.CS.CP.minEnableSpeed > 0 and ret.vEgo < 0.001:
+     # events.append(create_event('manualRestart', [ET.WARNING]))
 
     cur_time = self.frame * DT_CTRL
     enable_pressed = False
