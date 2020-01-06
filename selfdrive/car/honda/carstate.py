@@ -59,18 +59,18 @@ def get_can_signals(CP):
       #("GEAR_SHIFTER", "GEARBOX", 0),
       ("PEDAL_GAS", "POWERTRAIN_DATA", 0),
       ("CRUISE_SETTING", "SCM_BUTTONS", 0),
-      ("CRUISE_SPEED_PCM", "CRUISE"),
+      ("CRUISE_SPEED_PCM", "CRUISE", 0 ),
       #("ACC_STATUS", "POWERTRAIN_DATA", 0),
   ]
 
   checks = [
-      ("ENGINE_DATA", 100),
-      ("WHEEL_SPEEDS", 50),
-      ("STEERING_SENSORS", 100),
-      ("SEATBELT_STATUS", 10),
-      ("CRUISE", 10),
-      ("POWERTRAIN_DATA", 100),
-      ("VSA_STATUS", 50),
+    #  ("ENGINE_DATA", 100),
+    #  ("WHEEL_SPEEDS", 50),
+    #  ("STEERING_SENSORS", 100),
+    #  ("SEATBELT_STATUS", 10),
+    #  ("CRUISE", 10),
+    #  ("POWERTRAIN_DATA", 100),
+    #  ("VSA_STATUS", 50),
   ]
 
   
