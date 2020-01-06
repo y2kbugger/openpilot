@@ -429,8 +429,8 @@ class CarInterface(CarInterfaceBase):
     ret.doorOpen = not self.CS.door_all_closed
     ret.seatbeltUnlatched = not self.CS.seatbelt
 
-    ret.stockAeb = 0 #self.CS.stock_aeb
-    ret.stockFcw = 0 #self.CS.stock_fcw
+    ret.stockAeb = False #self.CS.stock_aeb
+    ret.stockFcw = False #self.CS.stock_fcw
 
     if self.CS.left_blinker_on != self.CS.prev_left_blinker_on:
       be = car.CarState.ButtonEvent.new_message()
