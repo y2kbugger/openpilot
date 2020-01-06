@@ -64,13 +64,13 @@ def get_can_signals(CP):
   ]
 
   checks = [
-     # ("ENGINE_DATA", 100),
+      ("ENGINE_DATA", 100),
       ("WHEEL_SPEEDS", 50),
-     # ("STEERING_SENSORS", 100),
-     # ("SEATBELT_STATUS", 10),
-     # ("CRUISE", 10),
-     # ("POWERTRAIN_DATA", 100),
-     # ("VSA_STATUS", 50),
+      ("STEERING_SENSORS", 100),
+      ("SEATBELT_STATUS", 10),
+      ("CRUISE", 10),
+      ("POWERTRAIN_DATA", 100),
+      ("VSA_STATUS", 50),
   ]
 
   
@@ -92,7 +92,7 @@ def get_cam_can_parser(CP):
 
 
   # all hondas except CRV, RDX and 2019 Odyssey@China use 0xe4 for steering
-  checks = [(0x158, 100)]
+  #checks = [(0x158, 100)]
   #if CP.carFingerprint in [CAR.CRV, CAR.ACURA_RDX, CAR.ODYSSEY_CHN]:
    # checks = [(0x194, 100)]
 
