@@ -96,12 +96,12 @@ def get_can_signals(CP):
     if CP.carFingerprint not in (CAR.ACCORDH, CAR.CIVIC_BOSCH, CAR.CRV_HYBRID):
       signals += [("BRAKE_PRESSED", "BRAKE_MODULE", 0)]
       checks += [("BRAKE_MODULE", 50)]
-    signals += [("CAR_GAS", "GAS_PEDAL_2", 0),
-                ("MAIN_ON", "SCM_BUTTONS", 0)]
+   # signals += [("CAR_GAS", "GAS_PEDAL_2", 0),
+    #            ("MAIN_ON", "SCM_BUTTONS", 0)]
                # ("CRUISE_CONTROL_LABEL", "ACC_HUD", 0),
                # ("EPB_STATE", "EPB_STATUS", 0),
                # ("CRUISE_SPEED", "ACC_HUD", 0)]
-    checks += [("GAS_PEDAL_2", 100)]
+    #checks += [("GAS_PEDAL_2", 100)]
   else:
     # Nidec signals.
     signals += [("BRAKE_ERROR_1", "STANDSTILL", 1),
@@ -154,10 +154,10 @@ def get_can_signals(CP):
     checks += [("EPB_STATUS", 50)]
 
   # add gas interceptor reading if we are using it
-  if CP.enableGasInterceptor:
-    signals.append(("INTERCEPTOR_GAS", "GAS_SENSOR", 0))
-    signals.append(("INTERCEPTOR_GAS2", "GAS_SENSOR", 0))
-    checks.append(("GAS_SENSOR", 50))
+ # if CP.enableGasInterceptor:
+ #   signals.append(("INTERCEPTOR_GAS", "GAS_SENSOR", 0))
+ #   signals.append(("INTERCEPTOR_GAS2", "GAS_SENSOR", 0))
+ #   checks.append(("GAS_SENSOR", 50))
 
   return signals, checks
 
@@ -171,18 +171,18 @@ def get_can_parser(CP):
 def get_cam_can_parser(CP):
   signals = []
 
-  if CP.carFingerprint in HONDA_BOSCH:
-    signals += [("ACCEL_COMMAND", "ACC_CONTROL", 0),
-                ("AEB_STATUS", "ACC_CONTROL", 0)]
-  else:
-    signals += [("COMPUTER_BRAKE", "BRAKE_COMMAND", 0),
-                ("AEB_REQ_1", "BRAKE_COMMAND", 0),
-                ("FCW", "BRAKE_COMMAND", 0),
-                ("CHIME", "BRAKE_COMMAND", 0),
-                ("FCM_OFF", "ACC_HUD", 0),
-                ("FCM_OFF_2", "ACC_HUD", 0),
-                ("FCM_PROBLEM", "ACC_HUD", 0),
-                ("ICONS", "ACC_HUD", 0)]
+ # if CP.carFingerprint in HONDA_BOSCH:
+    #signals += [("ACCEL_COMMAND", "ACC_CONTROL", 0),
+               # ("AEB_STATUS", "ACC_CONTROL", 0)]
+ # else:
+  #  signals += [("COMPUTER_BRAKE", "BRAKE_COMMAND", 0),
+      #          ("AEB_REQ_1", "BRAKE_COMMAND", 0),
+      #          ("FCW", "BRAKE_COMMAND", 0),
+      #          ("CHIME", "BRAKE_COMMAND", 0),
+      #          ("FCM_OFF", "ACC_HUD", 0),
+      #          ("FCM_OFF_2", "ACC_HUD", 0),
+      #          ("FCM_PROBLEM", "ACC_HUD", 0),
+      #          ("ICONS", "ACC_HUD", 0)]
 
 
   # all hondas except CRV, RDX and 2019 Odyssey@China use 0xe4 for steering
@@ -190,7 +190,7 @@ def get_cam_can_parser(CP):
   if CP.carFingerprint in [CAR.CRV, CAR.ACURA_RDX, CAR.ODYSSEY_CHN]:
     checks = [(0x194, 100)]
 
-  bus_cam = 1 if CP.carFingerprint in HONDA_BOSCH  and not CP.isPandaBlack else 2
+  bus_cam = 2 # if CP.carFingerprint in HONDA_BOSCH  and not CP.isPandaBlack else 2
   return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, bus_cam)
 
 class CarState():
