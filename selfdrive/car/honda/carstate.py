@@ -274,7 +274,7 @@ class CarState():
     self.v_wheel_fr = cp.vl["WHEEL_SPEEDS"]['WHEEL_SPEED_FR'] * CV.KPH_TO_MS * speed_factor
     self.v_wheel_rl = cp.vl["WHEEL_SPEEDS"]['WHEEL_SPEED_RL'] * CV.KPH_TO_MS * speed_factor
     self.v_wheel_rr = cp.vl["WHEEL_SPEEDS"]['WHEEL_SPEED_RR'] * CV.KPH_TO_MS * speed_factor
-    v_wheel = (self.v_wheel_fl + self.v_wheel_fr + self.v_wheel_rl + self.v_wheel_rr)/4.
+    v_wheel = 30 #(self.v_wheel_fl + self.v_wheel_fr + self.v_wheel_rl + self.v_wheel_rr)/4.
 
     # blend in transmission speed at low speed, since it has more low speed accuracy
     self.v_weight = interp(v_wheel, v_weight_bp, v_weight_v)
