@@ -218,9 +218,10 @@ class CarState():
     self.gear_shifter = 'drive' #parse_gear_shifter(can_gear_shifter, self.shifter_values)
 
     
+      
 
    
-    self.car_gas = cp.vl["GAS_PEDAL_2"]['CAR_GAS']
+    self.car_gas = cp.vl["POWERTRAIN_DATA"]['PEDAL_GAS']
 
     self.steer_torque_driver = 0 #cp.vl["STEER_STATUS"]['STEER_TORQUE_SENSOR']
     self.steer_torque_motor = 0 #cp.vl["STEER_STATUS"]['STEER_TORQUE_MOTOR']
