@@ -1,6 +1,5 @@
 from selfdrive.config import Conversions as CV
 from selfdrive.car.honda.values import HONDA_BOSCH
-from selfdrive.car import crc8_pedal as crc8
 
 
 def get_pt_bus(car_fingerprint, has_relay):
@@ -37,25 +36,12 @@ def create_brake_command(packer, apply_brake, pump_on, pcm_override, pcm_cancel_
 
 
 def create_steering_control(packer, apply_steer, lkas_active, car_fingerprint, idx, has_relay):
-  
-  enable = lkas_active
-  
   values = {
-    "ENABLE": enable,
-    "COUNTER_TRQ": idx & 0xF,
+    "STEER_TORQUE": apply_steer if lkas_active else 0,
+    "STEER_TORQUE_REQUEST": lkas_active,
   }
-  
-  if enable:
-    values["STEER_COMMAND"] = apply_steer
-    values["STEER_COMMAND2"] = apply_steer
-    
-  dat = packer.make_can_msg("STEER_TORQUE_COMMAND", 0, values)[2]
-  
-  #dat = [ord(i) for i in dat]
-  checksum = crc8(dat[:-1])
-  values["CHECKSUM_TRQ"] = checksum
-  
-  return packer.make_can_msg("STEER_TORQUE_COMMAND", 0, values)
+  bus = get_lkas_cmd_bus(car_fingerprint, has_relay)
+  return packer.make_can_msg("STEERING_CONTROL", bus, values, idx)
 
 
 def create_ui_commands(packer, pcm_speed, hud, car_fingerprint, is_metric, idx, has_relay, stock_hud):
