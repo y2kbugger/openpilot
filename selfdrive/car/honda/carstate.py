@@ -91,7 +91,7 @@ def get_can_signals(CP):
       ("GEARBOX", 100),
     ]
 
-  if not CP.radarOffCan:
+  if CP.radarOffCan:
     # Civic is only bosch to use the same brake message as other hondas.
     if CP.carFingerprint not in (CAR.ACCORDH, CAR.CIVIC_BOSCH, CAR.CRV_HYBRID):
       signals += [("BRAKE_PRESSED", "BRAKE_MODULE", 0)]
@@ -262,7 +262,7 @@ class CarState():
     # LOW_SPEED_LOCKOUT is not worth a warning
     self.steer_warning = steer_status not in ['NORMAL', 'LOW_SPEED_LOCKOUT', 'NO_TORQUE_ALERT_2']
 
-    if not self.CP.radarOffCan:
+    if self.CP.radarOffCan:
       self.brake_error = 0
     else:
       self.brake_error = cp.vl["STANDSTILL"]['BRAKE_ERROR_1'] or cp.vl["STANDSTILL"]['BRAKE_ERROR_2']
@@ -333,7 +333,7 @@ class CarState():
 
     self.brake_switch = cp.vl["POWERTRAIN_DATA"]['BRAKE_SWITCH']
 
-    if not self.CP.radarOffCan:
+    if self.CP.radarOffCan:
       self.cruise_mode = cp.vl["ACC_HUD"]['CRUISE_CONTROL_LABEL']
       self.stopped = cp.vl["ACC_HUD"]['CRUISE_SPEED'] == 252.
       self.cruise_speed_offset = calc_cruise_offset(0, self.v_ego)
