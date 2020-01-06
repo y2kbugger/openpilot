@@ -121,8 +121,8 @@ class CarController():
 
     # *** compute control surfaces ***
    # BRAKE_MAX = 1024//4
-   # if CS.CP.carFingerprint in (CAR.ACURA_ILX):
-   #   STEER_MAX = 0xF00
+    if CS.CP.carFingerprint in (CAR.ACURA_ILX):
+      STEER_MAX = 0xF00
    # elif CS.CP.carFingerprint in (CAR.CRV, CAR.ACURA_RDX):
    #   STEER_MAX = 0x3e8  # CR-V only uses 12-bits and requires a lower value (max value from energee)
    # elif CS.CP.carFingerprint in (CAR.ODYSSEY_CHN):
@@ -133,7 +133,7 @@ class CarController():
     # steer torque is converted back to CAN reference (positive when steering right)
     apply_gas = clip(actuators.gas, 0., 1.)
     apply_brake = clip(actuators.brake, 0., 1.)
-    apply_steer = actuators.steer
+    apply_steer = int(clip(-actuators.steer * STEER_MAX, -STEER_MAX, STEER_MAX))
 
     lkas_active = enabled and not CS.steer_not_allowed
 
