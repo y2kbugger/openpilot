@@ -51,6 +51,7 @@ def get_can_signals(CP):
       ("BRAKE_PRESSED", "POWERTRAIN_DATA", 0),
       #("BRAKE_SWITCH", "POWERTRAIN_DATA", 0),
       ("CRUISE_BUTTONS", "SCM_BUTTONS", 0),
+      ("MAIN_ON", "SCM_BUTTONS", 0),
       #("ESP_DISABLED", "VSA_STATUS", 1),
       #("USER_BRAKE", "VSA_STATUS", 0),
       #("BRAKE_HOLD_ACTIVE", "VSA_STATUS", 0),
@@ -58,6 +59,7 @@ def get_can_signals(CP):
       #("GEAR_SHIFTER", "GEARBOX", 0),
       ("PEDAL_GAS", "POWERTRAIN_DATA", 0),
       ("CRUISE_SETTING", "SCM_BUTTONS", 0),
+      ("CRUISE_SPEED_PCM", "CRUISE"),
       #("ACC_STATUS", "POWERTRAIN_DATA", 0),
   ]
 
