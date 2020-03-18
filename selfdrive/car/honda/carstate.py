@@ -260,42 +260,42 @@ class CarState(CarStateBase):
     #self.brake_switch = cp.vl["POWERTRAIN_DATA"]['BRAKE_SWITCH'] != 0
 
     if self.CP.radarOffCan:
-      self.cruise_mode = cp.vl["ACC_HUD"]['CRUISE_CONTROL_LABEL']
-      ret.cruiseState.standstill = cp.vl["ACC_HUD"]['CRUISE_SPEED'] == 252.
+      self.cruise_mode = 0 # cp.vl["ACC_HUD"]['CRUISE_CONTROL_LABEL']
+      ret.cruiseState.standstill = False #cp.vl["ACC_HUD"]['CRUISE_SPEED'] == 252.
       ret.cruiseState.speedOffset = calc_cruise_offset(0, ret.vEgo)
-      if self.CP.carFingerprint in (CAR.CIVIC_BOSCH, CAR.CIVIC_BOSCH_DIESEL, CAR.ACCORDH, CAR.CRV_HYBRID, CAR.INSIGHT):
-        ret.brakePressed = cp.vl["POWERTRAIN_DATA"]['BRAKE_PRESSED'] != 0 or \
-                          (self.brake_switch and self.brake_switch_prev and \
-                          cp.ts["POWERTRAIN_DATA"]['BRAKE_SWITCH'] != self.brake_switch_ts)
-        self.brake_switch_prev = self.brake_switch
-        self.brake_switch_ts = cp.ts["POWERTRAIN_DATA"]['BRAKE_SWITCH']
-      else:
-        ret.brakePressed = cp.vl["BRAKE_MODULE"]['BRAKE_PRESSED'] != 0
-      # On set, cruise set speed pulses between 254~255 and the set speed prev is set to avoid this.
-      ret.cruiseState.speed = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED'] * CV.KPH_TO_MS
-      self.v_cruise_pcm_prev = ret.cruiseState.speed
-    else:
-      ret.cruiseState.speedOffset = calc_cruise_offset(cp.vl["CRUISE_PARAMS"]['CRUISE_SPEED_OFFSET'], ret.vEgo)
-      ret.cruiseState.speed = cp.vl["CRUISE"]['CRUISE_SPEED_PCM'] * CV.KPH_TO_MS
-      # brake switch has shown some single time step noise, so only considered when
-      # switch is on for at least 2 consecutive CAN samples
-      ret.brakePressed = bool(cp.vl["POWERTRAIN_DATA"]['BRAKE_PRESSED'] or
+     # if self.CP.carFingerprint in (CAR.CIVIC_BOSCH, CAR.CIVIC_BOSCH_DIESEL, CAR.ACCORDH, CAR.CRV_HYBRID, CAR.INSIGHT):
+     #   ret.brakePressed = cp.vl["POWERTRAIN_DATA"]['BRAKE_PRESSED'] != 0 or \
+     #                     (self.brake_switch and self.brake_switch_prev and \
+     #                     cp.ts["POWERTRAIN_DATA"]['BRAKE_SWITCH'] != self.brake_switch_ts)
+     #   self.brake_switch_prev = self.brake_switch
+     #   self.brake_switch_ts = cp.ts["POWERTRAIN_DATA"]['BRAKE_SWITCH']
+     # else:
+     ret.brakePressed = cp.vl["POWERTRAIN_DATA"]['BRAKE_PRESSED'] != 0
+     # # On set, cruise set speed pulses between 254~255 and the set speed prev is set to avoid this.
+     ret.cruiseState.speed = cp.vl["CRUISE"]['CRUISE_SPEED_PCM'] #self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED'] * CV.KPH_TO_MS
+     # self.v_cruise_pcm_prev = ret.cruiseState.speed
+    #else:
+    #  ret.cruiseState.speedOffset = calc_cruise_offset(cp.vl["CRUISE_PARAMS"]['CRUISE_SPEED_OFFSET'], ret.vEgo)
+    #  ret.cruiseState.speed = cp.vl["CRUISE"]['CRUISE_SPEED_PCM'] * CV.KPH_TO_MS
+    #  # brake switch has shown some single time step noise, so only considered when
+    #  # switch is on for at least 2 consecutive CAN samples
+    #  ret.brakePressed = bool(cp.vl["POWERTRAIN_DATA"]['BRAKE_PRESSED'] or
                               (self.brake_switch and self.brake_switch_prev and
                                cp.ts["POWERTRAIN_DATA"]['BRAKE_SWITCH'] != self.brake_switch_ts))
-      self.brake_switch_prev = self.brake_switch
-      self.brake_switch_ts = cp.ts["POWERTRAIN_DATA"]['BRAKE_SWITCH']
+    #  self.brake_switch_prev = self.brake_switch
+    #  self.brake_switch_ts = cp.ts["POWERTRAIN_DATA"]['BRAKE_SWITCH']
 
-    ret.brake = cp.vl["VSA_STATUS"]['USER_BRAKE']
-    ret.cruiseState.enabled = cp.vl["POWERTRAIN_DATA"]['ACC_STATUS'] != 0
+    ret.brake = 0 #cp.vl["VSA_STATUS"]['USER_BRAKE']
+    ret.cruiseState.enabled = cp.vl["CRUISE"]['CRUISE_SPEED_PCM'] !=0 #cp.vl["POWERTRAIN_DATA"]['ACC_STATUS'] != 0
     ret.cruiseState.available = bool(main_on) and self.cruise_mode == 0
 
     # Gets rid of Pedal Grinding noise when brake is pressed at slow speeds for some models
-    if self.CP.carFingerprint in (CAR.PILOT, CAR.PILOT_2019, CAR.RIDGELINE):
-      if ret.brake > 0.05:
-        ret.brakePressed = True
+   # if self.CP.carFingerprint in (CAR.PILOT, CAR.PILOT_2019, CAR.RIDGELINE):
+    #  if ret.brake > 0.05:
+     #   ret.brakePressed = True
 
     # TODO: discover the CAN msg that has the imperial unit bit for all other cars
-    self.is_metric = not cp.vl["HUD_SETTING"]['IMPERIAL_UNIT'] if self.CP.carFingerprint in (CAR.CIVIC) else False
+    self.is_metric = False #not cp.vl["HUD_SETTING"]['IMPERIAL_UNIT'] if self.CP.carFingerprint in (CAR.CIVIC) else False
 
    # if self.CP.carFingerprint in HONDA_BOSCH:
    #   ret.stockAeb = bool(cp_cam.vl["ACC_CONTROL"]["AEB_STATUS"] and cp_cam.vl["ACC_CONTROL"]["ACCEL_COMMAND"] < -1e-5)
