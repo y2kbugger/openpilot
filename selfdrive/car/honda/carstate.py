@@ -273,7 +273,7 @@ class CarState(CarStateBase):
      # else:
     ret.brakePressed = cp.vl["POWERTRAIN_DATA"]['BRAKE_PRESSED'] != 0
      # # On set, cruise set speed pulses between 254~255 and the set speed prev is set to avoid this.
-    ret.cruiseState.speed = cp.vl["CRUISE"]['CRUISE_SPEED_PCM'] #self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED'] * CV.KPH_TO_MS
+    ret.cruiseState.speed = cp.vl["CRUISE"]['CRUISE_SPEED_PCM']* CV.KPH_TO_MS #self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED'] * CV.KPH_TO_MS
      # self.v_cruise_pcm_prev = ret.cruiseState.speed
     #else:
     #  ret.cruiseState.speedOffset = calc_cruise_offset(cp.vl["CRUISE_PARAMS"]['CRUISE_SPEED_OFFSET'], ret.vEgo)
