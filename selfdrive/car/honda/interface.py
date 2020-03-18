@@ -121,7 +121,7 @@ class CarInterface(CarInterfaceBase):
 
     if candidate in HONDA_BOSCH:
       ret.safetyModel = car.CarParams.SafetyModel.hondaBoschHarness if has_relay else car.CarParams.SafetyModel.hondaBoschGiraffe
-      rdr_bus = 0 if has_relay else 2
+      rdr_bus = 0 # if has_relay else 2
       ret.enableCamera = is_ecu_disconnected(fingerprint[rdr_bus], FINGERPRINTS, ECU_FINGERPRINT, candidate, Ecu.fwdCamera) or has_relay
       ret.radarOffCan = True
       ret.openpilotLongitudinalControl = False
@@ -206,11 +206,11 @@ class CarInterface(CarInterfaceBase):
       ret.longitudinalTuning.kiV = [0.18, 0.12]
 
     elif candidate == CAR.ACURA_ILX:
-      stop_and_go = False
-      ret.mass = 3095. * CV.LB_TO_KG + STD_CARGO_KG
-      ret.wheelbase = 2.67
+      stop_and_go = True
+      ret.mass = 1240. * CV.LB_TO_KG + STD_CARGO_KG
+      ret.wheelbase = 2.66954
       ret.centerToFront = ret.wheelbase * 0.37
-      ret.steerRatio = 18.61  # 15.3 is spec end-to-end
+      ret.steerRatio = 16.1  # 15.3 is spec end-to-end
       ret.lateralParams.torqueBP, ret.lateralParams.torqueV = [[0, 3840], [0, 3840]] # TODO: determine if there is a dead zone at the top end
       tire_stiffness_factor = 0.72
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.8], [0.24]]

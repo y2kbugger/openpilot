@@ -7,7 +7,7 @@ def get_pt_bus(car_fingerprint, has_relay):
 
 
 def get_lkas_cmd_bus(car_fingerprint, has_relay):
-  return 2 if car_fingerprint in HONDA_BOSCH and not has_relay else 0
+  return 0 # 2 if car_fingerprint in HONDA_BOSCH and not has_relay else 0
 
 
 def create_brake_command(packer, apply_brake, pump_on, pcm_override, pcm_cancel_cmd, fcw, idx, car_fingerprint, has_relay, stock_brake):
