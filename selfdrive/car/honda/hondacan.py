@@ -7,7 +7,7 @@ def get_pt_bus(car_fingerprint, has_relay):
 
 
 def get_lkas_cmd_bus(car_fingerprint, has_relay):
-  return 0 # 2 if car_fingerprint in HONDA_BOSCH and not has_relay else 0
+  return 0 #2 if car_fingerprint in HONDA_BOSCH and not has_relay else 0
 
 
 def create_brake_command(packer, apply_brake, pump_on, pcm_override, pcm_cancel_cmd, fcw, idx, car_fingerprint, has_relay, stock_brake):
@@ -54,7 +54,7 @@ def create_ui_commands(packer, pcm_speed, hud, car_fingerprint, is_metric, idx, 
       'PCM_SPEED': pcm_speed * CV.MS_TO_KPH,
       'PCM_GAS': hud.pcm_accel,
       'CRUISE_SPEED': hud.v_cruise,
-      'ENABLE_MINI_CAR': 1,
+      'ENABLE_MINI_CAR': hud.mini_car,
       'HUD_LEAD': hud.car,
       'HUD_DISTANCE': 3,    # max distance setting on display
       'IMPERIAL_UNIT': int(not is_metric),
