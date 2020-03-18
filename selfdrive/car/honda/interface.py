@@ -455,26 +455,26 @@ class CarInterface(CarInterfaceBase):
 
     # events
     events = self.create_common_events(ret)
-    if self.CS.brake_error:
-      events.append(create_event('brakeUnavailable', [ET.NO_ENTRY, ET.IMMEDIATE_DISABLE, ET.PERMANENT]))
-    if self.CS.brake_hold and self.CS.CP.carFingerprint not in HONDA_BOSCH:
-      events.append(create_event('brakeHold', [ET.NO_ENTRY, ET.USER_DISABLE]))
-    if self.CS.park_brake:
-      events.append(create_event('parkBrake', [ET.NO_ENTRY, ET.USER_DISABLE]))
+    #if self.CS.brake_error:
+     # events.append(create_event('brakeUnavailable', [ET.NO_ENTRY, ET.IMMEDIATE_DISABLE, ET.PERMANENT]))
+    #if self.CS.brake_hold and self.CS.CP.carFingerprint not in HONDA_BOSCH:
+    #  events.append(create_event('brakeHold', [ET.NO_ENTRY, ET.USER_DISABLE]))
+    #if self.CS.park_brake:
+    #  events.append(create_event('parkBrake', [ET.NO_ENTRY, ET.USER_DISABLE]))
 
     if self.CP.enableCruise and ret.vEgo < self.CP.minEnableSpeed:
       events.append(create_event('speedTooLow', [ET.NO_ENTRY]))
 
     # it can happen that car cruise disables while comma system is enabled: need to
     # keep braking if needed or if the speed is very low
-    if self.CP.enableCruise and not ret.cruiseState.enabled and (c.actuators.brake <= 0. or not self.CP.openpilotLongitudinalControl):
+    #if self.CP.enableCruise and not ret.cruiseState.enabled and (c.actuators.brake <= 0. or not self.CP.openpilotLongitudinalControl):
       # non loud alert if cruise disbales below 25mph as expected (+ a little margin)
-      if ret.vEgo < self.CP.minEnableSpeed + 2.:
-        events.append(create_event('speedTooLow', [ET.IMMEDIATE_DISABLE]))
-      else:
-        events.append(create_event("cruiseDisabled", [ET.IMMEDIATE_DISABLE]))
-    if self.CS.CP.minEnableSpeed > 0 and ret.vEgo < 0.001:
-      events.append(create_event('manualRestart', [ET.WARNING]))
+    #  if ret.vEgo < self.CP.minEnableSpeed + 2.:
+    #    events.append(create_event('speedTooLow', [ET.IMMEDIATE_DISABLE]))
+    #  else:
+    #    events.append(create_event("cruiseDisabled", [ET.IMMEDIATE_DISABLE]))
+    #if self.CS.CP.minEnableSpeed > 0 and ret.vEgo < 0.001:
+    #  events.append(create_event('manualRestart', [ET.WARNING]))
 
     cur_time = self.frame * DT_CTRL
     enable_pressed = False
