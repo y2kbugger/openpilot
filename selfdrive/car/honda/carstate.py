@@ -259,10 +259,10 @@ class CarState(CarStateBase):
 
     #self.brake_switch = cp.vl["POWERTRAIN_DATA"]['BRAKE_SWITCH'] != 0
 
-    if self.CP.radarOffCan:
-      self.cruise_mode = 0 # cp.vl["ACC_HUD"]['CRUISE_CONTROL_LABEL']
-      ret.cruiseState.standstill = False #cp.vl["ACC_HUD"]['CRUISE_SPEED'] == 252.
-      ret.cruiseState.speedOffset = calc_cruise_offset(0, ret.vEgo)
+    #if self.CP.radarOffCan:
+    self.cruise_mode = 0 # cp.vl["ACC_HUD"]['CRUISE_CONTROL_LABEL']
+    ret.cruiseState.standstill = False #cp.vl["ACC_HUD"]['CRUISE_SPEED'] == 252.
+    ret.cruiseState.speedOffset = calc_cruise_offset(0, ret.vEgo)
      # if self.CP.carFingerprint in (CAR.CIVIC_BOSCH, CAR.CIVIC_BOSCH_DIESEL, CAR.ACCORDH, CAR.CRV_HYBRID, CAR.INSIGHT):
      #   ret.brakePressed = cp.vl["POWERTRAIN_DATA"]['BRAKE_PRESSED'] != 0 or \
      #                     (self.brake_switch and self.brake_switch_prev and \
@@ -270,9 +270,9 @@ class CarState(CarStateBase):
      #   self.brake_switch_prev = self.brake_switch
      #   self.brake_switch_ts = cp.ts["POWERTRAIN_DATA"]['BRAKE_SWITCH']
      # else:
-     ret.brakePressed = cp.vl["POWERTRAIN_DATA"]['BRAKE_PRESSED'] != 0
+    ret.brakePressed = cp.vl["POWERTRAIN_DATA"]['BRAKE_PRESSED'] != 0
      # # On set, cruise set speed pulses between 254~255 and the set speed prev is set to avoid this.
-     ret.cruiseState.speed = cp.vl["CRUISE"]['CRUISE_SPEED_PCM'] #self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED'] * CV.KPH_TO_MS
+    ret.cruiseState.speed = cp.vl["CRUISE"]['CRUISE_SPEED_PCM'] #self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED'] * CV.KPH_TO_MS
      # self.v_cruise_pcm_prev = ret.cruiseState.speed
     #else:
     #  ret.cruiseState.speedOffset = calc_cruise_offset(cp.vl["CRUISE_PARAMS"]['CRUISE_SPEED_OFFSET'], ret.vEgo)
