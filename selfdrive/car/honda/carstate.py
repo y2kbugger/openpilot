@@ -47,6 +47,7 @@ def get_can_signals(CP):
       #("GEAR_SHIFTER", "GEARBOX", 0),
       ("PEDAL_GAS", "POWERTRAIN_DATA", 0),
       ("CRUISE_SETTING", "SCM_BUTTONS", 0),
+      ("CRUISE_SPEED_PCM", "CRUISE", 0 ),
       #("ACC_STATUS", "POWERTRAIN_DATA", 0),
   ]
 
